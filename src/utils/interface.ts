@@ -1,4 +1,4 @@
-export interface Iuser {
+export interface IUser {
     _id?: string;
     firstName?: string;
     lastName?: string;
@@ -6,7 +6,7 @@ export interface Iuser {
     password: string;
     profilePicture?: string;
     active: boolean;
-    role?: string;
+    isAdmin: boolean;
     verified: boolean;
     phone?: string;
     createdAt?: Date;
@@ -14,13 +14,13 @@ export interface Iuser {
 }
 
 export interface ICart {
-    user: Iuser;
+    user: IUser;
     items?: [];
     bill?: number;
 }
 
 export interface Items {
-    user: Iuser;
+    user: IUser;
     description: string;
     name: string;
     category: string;
@@ -28,7 +28,16 @@ export interface Items {
 }
 
 export interface Iorder {
-    owner: Iuser;
+    owner: IUser;
     items: ICart;
     bill: number;
+}
+
+export interface IOtp {
+    _id?: string;
+    email: string;
+    token: number;
+    expired: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
