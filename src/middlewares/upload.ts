@@ -13,6 +13,7 @@ v2.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: v2,
+    params: {},
 });
 
 const upload = multer({
