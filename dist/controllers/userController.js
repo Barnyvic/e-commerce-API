@@ -13,7 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = void 0;
+const mailgun_1 = __importDefault(require("../service/mailgun"));
+const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const Otp_1 = __importDefault(require("../models/Otp"));
 const response_1 = require("../utils/response");
 //@desc Register new user
 //@route POST /register
@@ -47,6 +50,16 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             phone,
             password,
         });
+        const otp = otp_generator_1.default.generate(6, {
+            digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
+        });
+        yield Otp_1.default.create({ email, token: otp });
+        const subject = 'User created';
+        const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
+        yield (0, mailgun_1.default)(email, subject, message);
     }
     catch (error) {
         (0, response_1.handleError)(req, error);
