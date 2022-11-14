@@ -1,0 +1,23 @@
+import mailgun from 'mailgun-js';
+const DOMAIN = process.env.MAIL_GUN_DOMAIN_NAME as string;
+const mg = mailgun({
+    apiKey: process.env.MAIL_GUN_API as string,
+    domain: DOMAIN,
+});
+
+const sendEmail = async (email: string, subject: string, message: string) => {
+    try {
+        const data = {
+            from: 'Barny Victor <barnyvictor50@gmail.com>',
+            to: email,
+            subject: subject,
+            text: message,
+        };
+
+        await mg.messages().send(data);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export default sendEmail;
