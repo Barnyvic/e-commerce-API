@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 import { IUser } from '../utils/interface';
 import bcrypt from 'bcrypt';
 
@@ -10,9 +10,12 @@ const userSchema = new Schema(
         password: { type: String, required: true },
         profilePicture: { type: String, default: '' },
         active: { type: Boolean, default: false },
+        role:{type: String, default:'customer',enum:['admin','vendor','user']},
         isAdmin: { type: Boolean, default: false },
         verified: { type: Boolean, default: false },
         phone: { type: String, unique: true },
+        cart:[{type:mongoose.Schema.Types.ObjectId,ref:'Product'}],
+        orders:[{type:mongoose.Schema.Types.ObjectId,ref:'Order'}],
     },
     { timestamps: true }
 );
