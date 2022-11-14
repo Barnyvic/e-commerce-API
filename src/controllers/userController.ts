@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { generateToken } from '../utils/jwt';
 import { IOtp, IUser } from '../utils/interface';
+import sendEmail from '../service/mailgun';
+import otpGenerator from 'otp-generator';
 import Users from '../models/userModel';
 import OTP from '../models/Otp';
-import { otp } from '../utils/generateOtp';
-import { errorResponse, handleError } from '../utils/response';
+import { errorResponse, handleError, successResponse } from '../utils/response';
 
 //@desc Register new user
 //@route POST /register
@@ -48,6 +49,7 @@ export const createUser = async (req: Request, res: Response) => {
                 'Phone Number already in use by another user'
             );
 
+        // save user to db
         await Users.create({
             firstName,
             lastName,
@@ -55,6 +57,27 @@ export const createUser = async (req: Request, res: Response) => {
             phone,
             password,
         });
+
+        // generate otp
+        const otp = otpGenerator.generate(6, {
+            digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
+        });
+
+        await OTP.create({ email, token: otp });
+
+        const subject = 'User created';
+        const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
+
+        await sendEmail(email, subject, message);
+
+        return successResponse(
+            res,
+            201,
+            'Account created successfully, kindly verify your email and login.'
+        );
     } catch (error) {
         handleError(req, error);
         return errorResponse(res, 500, 'Server error.');
