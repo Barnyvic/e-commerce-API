@@ -4,7 +4,7 @@ import { IOtp, IUser } from '../utils/interface';
 import Users from '../models/userModel';
 import OTP from '../models/Otp';
 import { otp } from '../utils/generateOtp';
-import { errorResponse } from '../utils/response';
+import { errorResponse, handleError } from '../utils/response';
 
 //@desc Register new user
 //@route POST /register
@@ -55,5 +55,8 @@ export const createUser = async (req: Request, res: Response) => {
             phone,
             password,
         });
-    } catch (error) {}
+    } catch (error) {
+        handleError(req, error);
+        return errorResponse(res, 500, 'Server error.');
+    }
 };
