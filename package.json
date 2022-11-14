@@ -5,6 +5,7 @@
     "main": "server.ts",
     "author": "Barny,Omotega and Elizabeth",
     "license": "MIT",
+    "type": "module",
     "dependencies": {
         "bcrypt": "^5.1.0",
         "cloudinary": "^1.32.0",
