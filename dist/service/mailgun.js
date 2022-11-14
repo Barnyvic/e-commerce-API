@@ -10,7 +10,7 @@ const mg = (0, mailgun_js_1.default)({
     domain: DOMAIN,
 });
 const data = {
-    from: 'Barny Victor <me@samples.mailgun.org>',
+    from: 'Barny Victor <barnyvictor50@gmail.com>',
     to: 'bar@example.com, YOU@YOUR_DOMAIN_NAME',
     subject: 'Hello',
     text: 'Testing some Mailgun awesomness!',
