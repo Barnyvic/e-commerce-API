@@ -17,28 +17,21 @@ export interface IUser {
 }
 
 export interface ICart {
-    user: IUser;
-    items?: [];
+    userId: IUser;
+    products?: [];
     bill?: number;
 }
 
 export interface Iproduct {
     id?: string;
     name?: string;
-    category?: string;
+    category?: [string];
     description?: string;
     image?: string;
     price?: number;
     sizes?: number;
     rating?: number;
 }
-// export interface Items {
-//     user: IUser;
-//     description: string;
-//     name: string;
-//     category: string;
-//     price: number;
-// }
 
 export interface Iorder {
     owner: IUser;
