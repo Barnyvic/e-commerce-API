@@ -2,7 +2,7 @@
     "name": "e-commerce",
     "version": "1",
     "description": "an API for e-commerce site where customers can shop and pay for things",
-    "main": "dist/server.js",
+    "main": "server.js",
     "author": "Barny,Omotega and Elizabeth",
     "license": "MIT",
     "type": "commonjs",
