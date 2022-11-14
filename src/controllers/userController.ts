@@ -7,7 +7,7 @@ import otpGenerator from 'otp-generator';
 import Users from '../models/userModel';
 import OTP from '../models/Otp';
 import { successResponse, errorResponse, handleError } from '../utils/response';
-import { hashPassword } from '../utils/hash'
+import { hashPassword, comparePassword } from '../utils/hash';
 
 //@desc Register new user
 //@route POST /register
@@ -47,7 +47,7 @@ export const createUser = async (req: Request, res: Response) => {
         'Phone Number already in use by another user'
       );
 
-      const hash = await hashPassword(password);
+    const hash = await hashPassword(password);
 
     // save user to db
     const user = await Users.create({
@@ -55,7 +55,7 @@ export const createUser = async (req: Request, res: Response) => {
       lastName,
       email,
       phone,
-      password:hash,
+      password: hash,
     });
 
     // generate otp
@@ -78,6 +78,30 @@ export const createUser = async (req: Request, res: Response) => {
       'Account created successfully, kindly verify your email and login.',
       user
     );
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return errorResponse(res, 400, 'please fill all fields');
+    const user = await Users.findOne({ email });
+    if (!user) return errorResponse(res, 404, 'user not found');
+    const isPassword = await comparePassword( password,user.password);
+    if (!isPassword) return errorResponse(res, 400, 'incorrect password');
+    const token = await generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    });
+    return successResponse(res, 200, 'user logged in successfully', {
+      user,
+      token,
+    });
   } catch (error) {
     handleError(req, error);
     return errorResponse(res, 500, 'Server error.');
