@@ -12,12 +12,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = __importDefault(require("./index"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const dbConfig_1 = require("./config/dbConfig");
-dotenv_1.default.config();
-const PORT = process.env.PORT || 4000;
-index_1.default.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, dbConfig_1.dbConnection)();
-    console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
-}));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
+const msg = {
+    from: `ecommerce <${process.env.SENGRID_EMAIL}>`,
+    mail_setting: { sandbox_mode: { enable: false } },
+};
+() => {
+    msg.mail_setting.sandbox_mode.enable = true;
+};
+const sendEmail = (email, subject, message) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (msg.to = email),
+            (msg.subject = subject),
+            (msg.text = message),
+            yield mail_1.default.send(msg);
+        console.log('message sent');
+    }
+    catch (error) {
+        return error;
+    }
+});
+exports.default = sendEmail;

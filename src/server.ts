@@ -1,4 +1,4 @@
-import app from '.';
+import app from './index';
 import dotenv from 'dotenv';
 import { dbConnection } from './config/dbConfig';
 
