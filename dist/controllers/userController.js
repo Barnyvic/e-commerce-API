@@ -13,11 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = void 0;
-const mailgun_1 = __importDefault(require("../service/mailgun"));
+// import sendEmail from '../service/mailgun';
+const email_1 = __importDefault(require("../utils/email"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const Otp_1 = __importDefault(require("../models/Otp"));
 const response_1 = require("../utils/response");
+const hash_1 = require("../utils/hash");
 //@desc Register new user
 //@route POST /register
 //@access Public
@@ -43,13 +45,14 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const phoneExist = yield userModel_1.default.findOne({ phone });
         if (phoneExist)
             return (0, response_1.errorResponse)(res, 409, 'Phone Number already in use by another user');
+        const hash = yield (0, hash_1.hashPassword)(password);
         // save user to db
-        yield userModel_1.default.create({
+        const user = yield userModel_1.default.create({
             firstName,
             lastName,
             email,
             phone,
-            password,
+            password: hash,
         });
         // generate otp
         const otp = otp_generator_1.default.generate(6, {
@@ -61,8 +64,8 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield Otp_1.default.create({ email, token: otp });
         const subject = 'User created';
         const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-        yield (0, mailgun_1.default)(email, subject, message);
-        return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.');
+        yield (0, email_1.default)(email, subject, message);
+        return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.', user);
     }
     catch (error) {
         (0, response_1.handleError)(req, error);

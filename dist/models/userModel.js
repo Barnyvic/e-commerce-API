@@ -44,7 +44,7 @@ const userSchema = new mongoose_1.Schema({
     password: { type: String, required: true },
     profilePicture: { type: String, default: '' },
     active: { type: Boolean, default: false },
-    role: { type: String, default: 'customer', enum: ['admin', 'vendor', 'user'] },
+    role: { type: String, default: 'user', enum: ['admin', 'vendor', 'user'] },
     isAdmin: { type: Boolean, default: false },
     verified: { type: Boolean, default: false },
     phone: { type: String, unique: true },
@@ -52,17 +52,15 @@ const userSchema = new mongoose_1.Schema({
     orders: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Order' }],
 }, { timestamps: true });
 const Users = (0, mongoose_1.model)('users', userSchema);
-userSchema.pre('save', function (next) {
-    const user = this;
-    if (!user.isModified('password'))
-        return next();
-    bcrypt_1.default.hash(user.password, 10, (err, hash) => {
-        if (err)
-            return next(err);
-        user.password = hash;
-        next();
-    });
-});
+// userSchema.pre('save', function (next) {
+//     const user = this;
+//     if (!user.isModified('password')) return next();
+//     bcrypt.hash(user.password, 10, (err, hash) => {
+//         if (err) return next(err);
+//         user.password = hash;
+//         next();
+//     });
+// });
 userSchema.methods.validatePassword = function (password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;

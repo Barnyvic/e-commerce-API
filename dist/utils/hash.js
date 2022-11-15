@@ -12,12 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = __importDefault(require("./index"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const dbConfig_1 = require("./config/dbConfig");
-dotenv_1.default.config();
-const PORT = process.env.PORT || 4000;
-index_1.default.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, dbConfig_1.dbConnection)();
-    console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-}));
+exports.comparePassword = exports.hashPassword = void 0;
+const bcrypt_1 = __importDefault(require("bcrypt"));
+function hashPassword(password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(password, salt);
+        return hashedPassword;
+    });
+}
+exports.hashPassword = hashPassword;
+function comparePassword(hashedPassword, password) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const isPassword = yield bcrypt_1.default.compare(hashedPassword, password);
+        return isPassword;
+    });
+}
+exports.comparePassword = comparePassword;
