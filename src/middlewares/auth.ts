@@ -8,7 +8,7 @@ export const authguard = async (req: Request, res: Response, next: NextFunction)
   try {
     if (req.headers && req.headers.authorization) {
       const token = req.headers.authorization.split(' ')[1];
-      const decoded = await decodeToken(token);
+      const decoded:any = await decodeToken(token);
       const user = await User.findById(decoded.id);
       if (!user) return errorResponse(res, 404, 'user not found')
       req.user = user;
