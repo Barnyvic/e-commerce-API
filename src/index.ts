@@ -3,6 +3,7 @@ import logger from 'morgan';
 import helmet from 'helmet';
 
 import userRouter from './routes/userRoute';
+import { CustomRequest } from '../src/utils/interface';
 
 const app: Express = express();
 app.use(helmet());
@@ -10,6 +11,12 @@ app.use(logger('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+declare global {
+  namespace Express {
+    interface Request extends CustomRequest {}
+  }
+}
 
 app.use('/api/users', userRouter);
 
