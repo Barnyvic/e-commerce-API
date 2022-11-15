@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { generateToken } from '../utils/jwt';
 import { IOtp, IUser } from '../utils/interface';
-// import sendEmail from '../service/mailgun';
-import sendEmail from '../utils/email';
+import sendEmail from '../service/mailgun';
+// import sendEmail from '../utils/email';
 import otpGenerator from 'otp-generator';
 import Users from '../models/userModel';
 import OTP from '../models/Otp';
@@ -91,7 +91,7 @@ export const login = async (req: Request, res: Response) => {
       return errorResponse(res, 400, 'please fill all fields');
     const user = await Users.findOne({ email });
     if (!user) return errorResponse(res, 404, 'user not found');
-    const isPassword = await comparePassword( password,user.password);
+    const isPassword = await comparePassword(password, user.password);
     if (!isPassword) return errorResponse(res, 400, 'incorrect password');
     const token = await generateToken({
       id: user.id,
