@@ -27,6 +27,7 @@ const sendEmail = (email, subject, message) => __awaiter(void 0, void 0, void 0,
             text: message,
         };
         yield mg.messages().send(data);
+        console.log(data);
     }
     catch (error) {
         console.log(error);

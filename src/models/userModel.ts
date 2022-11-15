@@ -10,16 +10,19 @@ const userSchema = new Schema(
         password: { type: String, required: true },
         profilePicture: { type: String, default: '' },
         active: { type: Boolean, default: false },
-        role:{type: String, default:'customer',enum:['admin','vendor','user']},
+        role: {
+            type: String,
+            default: 'user',
+            enum: ['admin', 'vendor', 'user'],
+        },
         isAdmin: { type: Boolean, default: false },
         verified: { type: Boolean, default: false },
         phone: { type: String, unique: true },
-        cart:[{type:mongoose.Schema.Types.ObjectId,ref:'Product'}],
-        orders:[{type:mongoose.Schema.Types.ObjectId,ref:'Order'}],
+        cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+        orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     },
     { timestamps: true }
 );
-const Users = model<IUser>('users', userSchema);
 
 userSchema.pre('save', function (next) {
     const user = this;
@@ -39,5 +42,7 @@ userSchema.methods.validatePassword = async function (password: string) {
 
     return compare;
 };
+
+const Users = model<IUser>('users', userSchema);
 
 export default Users;

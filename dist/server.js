@@ -19,5 +19,5 @@ dotenv_1.default.config();
 const PORT = process.env.PORT || 4000;
 _1.default.listen(PORT, () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, dbConfig_1.dbConnection)();
-    console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+    console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 }));

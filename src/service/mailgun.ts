@@ -1,4 +1,7 @@
 import mailgun from 'mailgun-js';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const DOMAIN = process.env.MAIL_GUN_DOMAIN_NAME as string;
 const mg = mailgun({
     apiKey: process.env.MAIL_GUN_API as string,
@@ -15,6 +18,7 @@ const sendEmail = async (email: string, subject: string, message: string) => {
         };
 
         await mg.messages().send(data);
+        console.log(data);
     } catch (error) {
         console.log(error);
     }

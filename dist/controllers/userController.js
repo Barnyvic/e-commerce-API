@@ -43,6 +43,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const phoneExist = yield userModel_1.default.findOne({ phone });
         if (phoneExist)
             return (0, response_1.errorResponse)(res, 409, 'Phone Number already in use by another user');
+        // save user to db
         yield userModel_1.default.create({
             firstName,
             lastName,
@@ -50,6 +51,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             phone,
             password,
         });
+        // generate otp
         const otp = otp_generator_1.default.generate(6, {
             digits: true,
             lowerCaseAlphabets: false,
@@ -60,6 +62,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const subject = 'User created';
         const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
         yield (0, mailgun_1.default)(email, subject, message);
+        return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.');
     }
     catch (error) {
         (0, response_1.handleError)(req, error);
