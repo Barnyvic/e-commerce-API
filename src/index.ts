@@ -3,6 +3,7 @@ import logger from 'morgan';
 import helmet from 'helmet';
 
 import userRouter from './routes/userRoute';
+import productRouter from './routes/productRoute';
 import { CustomRequest } from '../src/utils/interface';
 
 const app: Express = express();
@@ -19,6 +20,7 @@ declare global {
 }
 
 app.use('/api/users', userRouter);
+app.use('/api/products', productRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');

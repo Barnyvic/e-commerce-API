@@ -30,7 +30,7 @@ export interface ICart {
 }
 
 export interface Iproduct {
-  id?: string;
+  owner?: IUser;
   name?: string;
   category?: [string];
   description?: string;
@@ -61,5 +61,3 @@ export interface IOtp {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-
