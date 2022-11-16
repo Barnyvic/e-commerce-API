@@ -31,4 +31,15 @@ export const verifyAdmin = async (req: Request, res: Response ,next: NextFunctio
     return errorResponse(res, 500, error.message);
   }
 }
+
+export const verifyVendor = async(req: Request, res:Response,next:NextFunction) => {
+  try {
+    const { _id } = req.user;
+    const vendor = User.findOne({ _id, role: 'vendor' });
+    if (!vendor) return errorResponse(res, 404, 'unauthorized access');
+    return next()
+  } catch (error:any) {
+    return errorResponse(res, 500, error.message);
+  }
+}
   
