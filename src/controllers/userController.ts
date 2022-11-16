@@ -8,7 +8,6 @@ import Users from '../models/userModel';
 import OTP from '../models/Otp';
 import { successResponse, errorResponse, handleError } from '../utils/response';
 import { hashPassword, comparePassword } from '../utils/hash';
-import { isAbsolute } from 'node:path/win32';
 
 //@desc Register new user
 //@route POST /register
