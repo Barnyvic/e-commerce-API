@@ -14,5 +14,5 @@ export const generateToken = async (payload: any, Secret = jwtSecret) => {
 
 export async function decodeToken(token: any) {
   const payload = await jwt.verify(token, jwtSecret);
-  return token;
+  return payload;
 }
