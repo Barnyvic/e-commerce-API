@@ -8,6 +8,7 @@ import Users from '../models/userModel';
 import OTP from '../models/Otp';
 import { successResponse, errorResponse, handleError } from '../utils/response';
 import { hashPassword, comparePassword } from '../utils/hash';
+import { isAbsolute } from 'node:path/win32';
 
 //@desc Register new user
 //@route POST /register
@@ -15,7 +16,7 @@ import { hashPassword, comparePassword } from '../utils/hash';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password, phone, confirmPassword } =
+    const { firstName, lastName, email, password, phone, confirmPassword, } =
       req.body;
 
     //    making sure all fields are valid
@@ -65,12 +66,12 @@ export const createUser = async (req: Request, res: Response) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    console.log(otp);
+   
  
     await OTP.create({ email, token: otp });
     const subject = 'User created';
     const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-    console.log(subject);
+   
     await sendEmail(email, subject, message);
 
     return successResponse(
@@ -114,7 +115,6 @@ export const updateProfile = async (req: Request, res: Response) => {
     const { _id } = req.user
     const {email,firstName,lastName,phone} = req.body
     const user = await Users.findById(_id);
-    console.log(user);
     if(!user) return errorResponse(res,404,'user not found');
     if(user.id.toString() != _id) return errorResponse(res,404,'user not authorized');
     const profile = await Users.findByIdAndUpdate({ _id },{email,firstName,lastName,phone},{new:true})
