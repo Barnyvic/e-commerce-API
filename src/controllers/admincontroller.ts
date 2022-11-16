@@ -89,3 +89,17 @@ export const createVendor = async (req: Request, res: Response) => {
     return errorResponse(res, 500, 'Server error.');
   }
 };
+
+export const deactivateUser = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const user = await Users.findById(_id);
+    if (!user) return errorResponse(res, 404, 'User not found');
+    user.active = false;
+    const result = await user.save();
+    return successResponse(res, 200, 'user deactivated', result);
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
