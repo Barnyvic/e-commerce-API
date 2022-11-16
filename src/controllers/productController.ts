@@ -97,3 +97,22 @@ export const getProduct = async (req: Request, res: Response) => {
     return errorResponse(res, 500, 'Server error.');
   }
 };
+
+export const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    if (_id === products?.owner?.toString()) {
+      const updatedProduct = await Products.updateOne({
+        $set: req.body,
+      });
+
+      return successResponse(res, 200, 'Product Updated....', updatedProduct);
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
