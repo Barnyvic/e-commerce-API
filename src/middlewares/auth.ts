@@ -37,7 +37,7 @@ export const verifyVendor = async(req: Request, res:Response,next:NextFunction) 
     const { _id } = req.user;
     const vendor = User.findOne({ _id, role: 'vendor' });
     if (!vendor) return errorResponse(res, 404, 'unauthorized access');
-    return next()
+    return next();
   } catch (error:any) {
     return errorResponse(res, 500, error.message);
   }
