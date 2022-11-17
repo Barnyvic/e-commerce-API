@@ -3,5 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const userRouter = (0, express_1.Router)();
 const userController_1 = require("../controllers/userController");
+const auth_1 = require("../middlewares/auth");
 userRouter.route('/signup').post(userController_1.createUser);
+userRouter.route('/login').get(userController_1.login);
+userRouter.route('/update').patch(auth_1.authguard, userController_1.updateProfile);
 exports.default = userRouter;

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createNewProduct,
+  deleteProduct,
   getAllProducts,
   getProduct,
   updateProduct,
@@ -14,12 +15,13 @@ const productRouter = Router();
 productRouter.route('/').post(authguard, createNewProduct).get(getAllProducts);
 
 productRouter
-  .route('/upload-image/:productid')
-  .patch(authguard, upload.array('image'), uplooadProductImages);
-
-productRouter
   .route('/:productid')
   .get(getProduct)
-  .put(authguard, updateProduct);
+  .put(authguard, updateProduct)
+  .delete(authguard, deleteProduct);
+
+productRouter
+  .route('/uploadimage/:productid')
+  .patch(authguard, upload.array('image'), uplooadProductImages);
 
 export default productRouter;

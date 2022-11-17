@@ -39,13 +39,21 @@ export const createNewProduct = async (req: Request, res: Response) => {
   }
 };
 
+//@desc Upload product image
+//@route POST /upload-image/:productid
+//@access Private
+
 export const uplooadProductImages = async (req: Request, res: Response) => {
   try {
     const { productid } = req.params;
+
     const product = await Products.findById(productid);
 
+    const id = product?.owner?.toString();
+
     const { _id } = req.user;
-    if (_id === product?.owner?.toString()) {
+
+    if (_id?.toString() === id) {
       const product = await Products.findByIdAndUpdate(
         productid,
         {
@@ -68,6 +76,10 @@ export const uplooadProductImages = async (req: Request, res: Response) => {
     return errorResponse(res, 500, 'Server error.');
   }
 };
+
+//@desc get all Products
+//@route GET /
+//@access Public
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -92,6 +104,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
+//@desc get a  particular Product
+//@route GET /:productid
+//@access Public
+
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const singleProduct = await Products.findById(req.params.productid);
@@ -105,18 +121,42 @@ export const getProduct = async (req: Request, res: Response) => {
   }
 };
 
+//@desc Update a Product
+//@route PUT /:productid
+//@access Private
+
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { _id } = req.user;
     const { productid } = req.params;
     const products = await Products.findById(productid);
 
-    if (_id === products?.owner?.toString()) {
+    if (_id?.toString() === products?.owner?.toString()) {
       const updatedProduct = await Products.updateOne({
         $set: req.body,
       });
 
       return successResponse(res, 200, 'Product Updated....', updatedProduct);
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc delete a Product
+//@route Delete /:productid
+//@access Private
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    if (_id?.toString() === products?.owner?.toString()) {
+      await Products.findByIdAndDelete(productid);
+      return successResponse(res, 204, 'Product Deleted successfully..');
     }
   } catch (error) {
     handleError(req, error);

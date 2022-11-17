@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import userRouter from './routes/userRoute';
 import productRouter from './routes/productRoute';
 import { CustomRequest } from '../src/utils/interface';
+import adminRouter from '../src/routes/admin';
 
 const app: Express = express();
 app.use(helmet());
@@ -21,6 +22,7 @@ declare global {
 
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
+app.use('/api/admin', adminRouter);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
