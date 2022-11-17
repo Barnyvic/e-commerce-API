@@ -71,10 +71,17 @@ export const uplooadProductImages = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    const query = req.query.new;
-    const products = query
-      ? await Products.find().sort({ _id: -1 })
-      : await Products.find();
+    const New = req.query.new;
+    const Category = req.query.category;
+    let products;
+
+    if (New) {
+      products = await Products.find().sort({ createdAt: -1 });
+    } else if (Category) {
+      products = await Products.find({ category: { $in: [Category] } });
+    } else {
+      products = await Products.find();
+    }
 
     if (!products) return errorResponse(res, 404, 'Product not found');
 
