@@ -30,7 +30,7 @@ export interface ICart {
 }
 
 export interface Iproduct {
-  id?: string;
+  owner?: IUser;
   name?: string;
   category?: [string];
   description?: string;
@@ -38,6 +38,7 @@ export interface Iproduct {
   price?: number;
   sizes?: number;
   rating?: number;
+  instock?: boolean;
 }
 
 export interface Iorder {
@@ -61,5 +62,3 @@ export interface IOtp {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-

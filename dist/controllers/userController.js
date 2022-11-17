@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = void 0;
-// import sendEmail from '../service/mailgun';
-const email_1 = __importDefault(require("../utils/email"));
+exports.updateProfile = exports.login = exports.createUser = void 0;
+const jwt_1 = require("../utils/jwt");
+const mailgun_1 = __importDefault(require("../service/mailgun"));
+// import sendEmail from '../utils/email';
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const Otp_1 = __importDefault(require("../models/Otp"));
@@ -25,7 +26,7 @@ const hash_1 = require("../utils/hash");
 //@access Public
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, email, password, phone, confirmPassword } = req.body;
+        const { firstName, lastName, email, password, phone, confirmPassword, } = req.body;
         //    making sure all fields are valid
         if (!email ||
             !password ||
@@ -64,7 +65,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield Otp_1.default.create({ email, token: otp });
         const subject = 'User created';
         const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-        yield (0, email_1.default)(email, subject, message);
+        yield (0, mailgun_1.default)(email, subject, message);
         return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.', user);
     }
     catch (error) {
@@ -73,3 +74,48 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createUser = createUser;
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password)
+            return (0, response_1.errorResponse)(res, 400, 'please fill all fields');
+        const user = yield userModel_1.default.findOne({ email });
+        if (!user)
+            return (0, response_1.errorResponse)(res, 404, 'user not found');
+        const isPassword = yield (0, hash_1.comparePassword)(password, user.password);
+        if (!isPassword)
+            return (0, response_1.errorResponse)(res, 400, 'incorrect password');
+        const token = yield (0, jwt_1.generateToken)({
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        });
+        return (0, response_1.successResponse)(res, 200, 'user logged in successfully', {
+            user,
+            token,
+        });
+    }
+    catch (error) {
+        (0, response_1.handleError)(req, error);
+        return (0, response_1.errorResponse)(res, 500, 'Server error.');
+    }
+});
+exports.login = login;
+const updateProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { _id } = req.user;
+        const { email, firstName, lastName, phone } = req.body;
+        const user = yield userModel_1.default.findById(_id);
+        if (!user)
+            return (0, response_1.errorResponse)(res, 404, 'user not found');
+        if (user.id.toString() != _id)
+            return (0, response_1.errorResponse)(res, 404, 'user not authorized');
+        const profile = yield userModel_1.default.findByIdAndUpdate({ _id }, { email, firstName, lastName, phone }, { new: true });
+        return (0, response_1.successResponse)(res, 200, 'user profile updated successfully', profile);
+    }
+    catch (error) {
+        (0, response_1.handleError)(req, error);
+        return (0, response_1.errorResponse)(res, 500, 'Server error.');
+    }
+});
+exports.updateProfile = updateProfile;

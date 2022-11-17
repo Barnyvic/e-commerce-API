@@ -15,10 +15,9 @@ cloudinary_1.v2.config({
 });
 const storage = new multer_storage_cloudinary_1.CloudinaryStorage({
     cloudinary: cloudinary_1.v2,
-    params: {},
 });
 const upload = (0, multer_1.default)({
-    storage: storage,
+    storage,
     limits: {
         fileSize: 5120 * 1024 * 1024,
     },
