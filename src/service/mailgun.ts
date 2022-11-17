@@ -1,23 +1,26 @@
-import mailgun from 'mailgun-js';
-const DOMAIN = process.env.MAIL_GUN_DOMAIN_NAME as string;
-const mg = mailgun({
-    apiKey: process.env.MAIL_GUN_API as string,
-    domain: DOMAIN,
-});
+// const API_KEY = process.env.MAIL_GUN_API as string;
+// const DOMAIN = process.env.MAIL_GUN_DOMAIN_NAME as string;
 
-const sendEmail = async (email: string, subject: string, message: string) => {
-    try {
-        const data = {
-            from: 'Barny Victor <barnyvictor50@gmail.com>',
-            to: email,
-            subject: subject,
-            text: message,
-        };
+// import formData from 'form-data';
+// // import Mailgun from 'mailgun.js';
 
-        await mg.messages().send(data);
-    } catch (error) {
-        console.log(error);
-    }
-};
+// // const mailgun = new Mailgun(formData as any);
+// // const client = mailgun.client({ username: 'Victor barny', key: API_KEY });
 
-export default sendEmail;
+// const sendEmail = async (email: string, subject: string, message: string) => {
+//   try {
+//     const messageData = {
+//       from: 'Barny Victor <barnyvictor50@gmail.com>',
+//       to: email,
+//       subject: subject,
+//       text: message,
+//     };
+
+//     await client.messages.create(DOMAIN, messageData);
+//     console.log(messageData);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// export default sendEmail;

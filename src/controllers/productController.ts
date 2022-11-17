@@ -1,0 +1,165 @@
+import { Request, Response } from 'express';
+import Products from '../models/productmodels';
+import Users from '../models/userModel';
+import { successResponse, errorResponse, handleError } from '../utils/response';
+import { Iproduct } from '../utils/interface';
+
+//@desc Create a  new Product
+//@route POST /register
+//@access Public
+
+export const createNewProduct = async (req: Request, res: Response) => {
+  try {
+    const { name, category, description, price, sizes, rating } = req.body;
+
+    const { _id } = req.user;
+    const user = await Users.findById(_id);
+    if (user?.role.includes('user'))
+      return errorResponse(res, 401, 'You are not authorided');
+
+    const product = await Products.create({
+      owner: user?.id,
+      name,
+      category,
+      description,
+      price,
+      sizes,
+      rating,
+    });
+
+    return successResponse(
+      res,
+      201,
+      'Product created successfully....',
+      product
+    );
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc Upload product image
+//@route POST /upload-image/:productid
+//@access Private
+
+export const uplooadProductImages = async (req: Request, res: Response) => {
+  try {
+    const { productid } = req.params;
+
+    const product = await Products.findById(productid);
+
+    const id = product?.owner?.toString();
+
+    const { _id } = req.user;
+
+    if (_id?.toString() === id) {
+      const product = await Products.findByIdAndUpdate(
+        productid,
+        {
+          images: req.file?.path,
+        },
+        { new: true }
+      ).select('-password');
+
+      return successResponse(
+        res,
+        200,
+        'Image successfully uploaded....',
+        product
+      );
+    } else {
+      return errorResponse(res, 401, 'You are not authorided');
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc get all Products
+//@route GET /
+//@access Public
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    const New = req.query.new;
+    const Category = req.query.category;
+    let products;
+
+    if (New) {
+      products = await Products.find().sort({ createdAt: -1 });
+    } else if (Category) {
+      products = await Products.find({ category: { $in: [Category] } });
+    } else {
+      products = await Products.find();
+    }
+
+    if (!products) return errorResponse(res, 404, 'Product not found');
+
+    return successResponse(res, 200, 'List Of all products....', products);
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc get a  particular Product
+//@route GET /:productid
+//@access Public
+
+export const getProduct = async (req: Request, res: Response) => {
+  try {
+    const singleProduct = await Products.findById(req.params.productid);
+
+    if (!singleProduct) return errorResponse(res, 404, 'Product not found');
+
+    return successResponse(res, 200, 'Product....', singleProduct);
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc Update a Product
+//@route PUT /:productid
+//@access Private
+
+export const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    if (_id?.toString() === products?.owner?.toString()) {
+      const updatedProduct = await Products.updateOne({
+        $set: req.body,
+      });
+
+      return successResponse(res, 200, 'Product Updated....', updatedProduct);
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc delete a Product
+//@route Delete /:productid
+//@access Private
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    if (_id?.toString() === products?.owner?.toString()) {
+      await Products.findByIdAndDelete(productid);
+      return successResponse(res, 204, 'Product Deleted successfully..');
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};

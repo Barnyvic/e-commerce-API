@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyAdmin = exports.authguard = void 0;
+exports.verifyVendor = exports.verifyAdmin = exports.authguard = void 0;
 const jwt_1 = require("../utils/jwt");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const response_1 = require("../utils/response");
@@ -41,7 +41,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const { _id } = req.user;
         const admin = userModel_1.default.findOne({ _id, role: 'admin' });
         if (!admin)
-            return (0, response_1.errorResponse)(res, 404, 'unauthorized access');
+            return (0, response_1.errorResponse)(res, 401, 'unauthorized access');
         return next();
     }
     catch (error) {
@@ -49,3 +49,16 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.verifyAdmin = verifyAdmin;
+const verifyVendor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { _id } = req.user;
+        const vendor = userModel_1.default.findOne({ _id, role: 'vendor' });
+        if (!vendor)
+            return (0, response_1.errorResponse)(res, 401, 'unauthorized access');
+        return next();
+    }
+    catch (error) {
+        return (0, response_1.errorResponse)(res, 500, error.message);
+    }
+});
+exports.verifyVendor = verifyVendor;

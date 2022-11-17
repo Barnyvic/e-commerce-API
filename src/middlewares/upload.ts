@@ -6,21 +6,20 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 v2.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API_KEY,
-    api_secret: process.env.CLOUD_API_SECRET,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
 });
 
 const storage = new CloudinaryStorage({
-    cloudinary: v2,
-    params: {},
+  cloudinary: v2,
 });
 
 const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5120 * 1024 * 1024,
-    },
+  storage,
+  limits: {
+    fileSize: 5120 * 1024 * 1024,
+  },
 });
 
 export default upload;

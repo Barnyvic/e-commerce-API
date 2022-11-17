@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createVendor = void 0;
+exports.deactivateUser = exports.createVendor = void 0;
 // import sendEmail from '../service/mailgun';
 const email_1 = __importDefault(require("../utils/email"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
@@ -74,3 +74,19 @@ const createVendor = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createVendor = createVendor;
+const deactivateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { _id } = req.user;
+        const user = yield userModel_1.default.findById(_id);
+        if (!user)
+            return (0, response_1.errorResponse)(res, 404, 'User not found');
+        user.active = false;
+        const result = yield user.save();
+        return (0, response_1.successResponse)(res, 200, 'user deactivated', result);
+    }
+    catch (error) {
+        (0, response_1.handleError)(req, error);
+        return (0, response_1.errorResponse)(res, 500, 'Server error.');
+    }
+});
+exports.deactivateUser = deactivateUser;
