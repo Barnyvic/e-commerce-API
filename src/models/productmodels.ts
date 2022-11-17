@@ -2,16 +2,20 @@ import mongoose from 'mongoose';
 import { Iproduct } from '../utils/interface';
 
 const productSchema = new mongoose.Schema(
-    {
-        name: { type: String, required: true },
-        category: { type: Array },
-        description: { type: String, required: true },
-        images: [String],
-        price: { type: Number, required: true },
-        sizes: [String],
-        rating: { type: Number },
-    },
-    { timestamps: true }
+  {
+    owner: { type: mongoose.Types.ObjectId },
+    name: { type: String, required: true },
+    category: { type: Array },
+    description: { type: String, required: true },
+    images: [String],
+    price: { type: Number, required: true },
+    sizes: [String],
+    instock: { type: Boolean, default: true },
+    rating: { type: Number },
+  },
+  { timestamps: true }
 );
 
-export default mongoose.model<Iproduct>('Product', productSchema);
+const Products = mongoose.model<Iproduct>('Product', productSchema);
+
+export default Products;

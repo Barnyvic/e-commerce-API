@@ -18,6 +18,7 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
 const Users = model<IUser>('users', userSchema);
 
 export default Users;

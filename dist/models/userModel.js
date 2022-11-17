@@ -22,28 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const userSchema = new mongoose_1.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
     profilePicture: { type: String, default: '' },
-    active: { type: Boolean, default: false },
+    active: { type: Boolean, default: true },
     role: { type: String, default: 'user', enum: ['admin', 'vendor', 'user'] },
     isAdmin: { type: Boolean, default: false },
     verified: { type: Boolean, default: false },
@@ -52,20 +39,4 @@ const userSchema = new mongoose_1.Schema({
     orders: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Order' }],
 }, { timestamps: true });
 const Users = (0, mongoose_1.model)('users', userSchema);
-// userSchema.pre('save', function (next) {
-//     const user = this;
-//     if (!user.isModified('password')) return next();
-//     bcrypt.hash(user.password, 10, (err, hash) => {
-//         if (err) return next(err);
-//         user.password = hash;
-//         next();
-//     });
-// });
-userSchema.methods.validatePassword = function (password) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
-        const compare = yield bcrypt_1.default.compare(password, user.password);
-        return compare;
-    });
-};
 exports.default = Users;
