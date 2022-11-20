@@ -12,8 +12,9 @@ productRouter.route('/').post(auth_1.authguard, productController_1.createNewPro
 productRouter
     .route('/:productid')
     .get(productController_1.getProduct)
-    .put(auth_1.authguard, productController_1.updateProduct);
+    .put(auth_1.authguard, productController_1.updateProduct)
+    .delete(auth_1.authguard, productController_1.deleteProduct);
 productRouter
     .route('/uploadimage/:productid')
-    .patch(auth_1.authguard, upload_1.default.single('image'), productController_1.uplooadProductImages);
+    .patch(auth_1.authguard, upload_1.default.array('image'), productController_1.uplooadProductImages);
 exports.default = productRouter;
