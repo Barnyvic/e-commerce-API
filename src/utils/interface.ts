@@ -62,3 +62,9 @@ export interface IOtp {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IReview extends IUser, Iproduct {
+  user: IUser;
+  product: Iproduct;
+  text: string;
+}
