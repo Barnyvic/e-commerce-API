@@ -15,7 +15,7 @@ import { hashPassword, comparePassword } from '../utils/hash';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password, phone, confirmPassword, } =
+    const { firstName, lastName, email, password, phone, confirmPassword } =
       req.body;
 
     //    making sure all fields are valid
@@ -65,12 +65,11 @@ export const createUser = async (req: Request, res: Response) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-   
- 
+
     await OTP.create({ email, token: otp });
     const subject = 'User created';
     const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-   
+
     await sendEmail(email, subject, message);
 
     return successResponse(
@@ -111,16 +110,25 @@ export const login = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const { _id } = req.user
-    const {email,firstName,lastName,phone} = req.body
+    const { _id } = req.user;
+    const { email, firstName, lastName, phone } = req.body;
     const user = await Users.findById(_id);
-    if(!user) return errorResponse(res,404,'user not found');
-    if(user.id.toString() != _id) return errorResponse(res,404,'user not authorized');
-    const profile = await Users.findByIdAndUpdate({ _id },{email,firstName,lastName,phone},{new:true})
-    return successResponse(res,200,'user profile updated successfully',profile)
+    if (!user) return errorResponse(res, 404, 'user not found');
+    if (user.id.toString() != _id)
+      return errorResponse(res, 404, 'user not authorized');
+    const profile = await Users.findByIdAndUpdate(
+      { _id },
+      { email, firstName, lastName, phone },
+      { new: true }
+    );
+    return successResponse(
+      res,
+      200,
+      'user profile updated successfully',
+      profile
+    );
   } catch (error) {
     handleError(req, error);
     return errorResponse(res, 500, 'Server error.');
-    
   }
-}
+};

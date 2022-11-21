@@ -12,6 +12,7 @@ const productSchema = new mongoose_1.default.Schema({
     images: [String],
     price: { type: Number, required: true },
     sizes: [String],
+    instock: { type: Boolean, default: true },
     rating: { type: Number },
 }, { timestamps: true });
 const Products = mongoose_1.default.model('Product', productSchema);
