@@ -37,7 +37,7 @@ export const createReview = async (req: Request, res: Response) => {
 
 export const getReviews = async (req: Request, res: Response) => {
   try {
-    const review = await Reviews.find();
+    const review = await Reviews.find().populate('product', { image: 1 });
     if (!review) return errorResponse(res, 404, 'Product not found');
     return successResponse(res, 200, 'List Of all products....', review);
   } catch (error) {

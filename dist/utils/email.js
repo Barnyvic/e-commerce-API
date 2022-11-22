@@ -15,11 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mail_1 = __importDefault(require("@sendgrid/mail"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// import nodemailer from 'nodemailer';
-// import config from "../config";
 mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
 const msg = {
-    from: `Donda <${process.env.SENDGRID_EMAIL}>`,
+    from: `e-commerce <${process.env.SENDGRID_EMAIL}>`,
     mail_settings: { sandbox_mode: { enable: false } }
 };
 () => {

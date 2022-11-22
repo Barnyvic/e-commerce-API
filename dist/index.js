@@ -9,6 +9,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const productRoute_1 = __importDefault(require("./routes/productRoute"));
 const admin_1 = __importDefault(require("../src/routes/admin"));
+const review_1 = __importDefault(require("./routes/review"));
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)('dev'));
@@ -17,6 +18,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/api/users', userRoute_1.default);
 app.use('/api/products', productRoute_1.default);
 app.use('/api/admin', admin_1.default);
+app.use('/api/review', review_1.default);
 app.get('/', (req, res) => {
     res.send('Express + TypeScript Server');
 });

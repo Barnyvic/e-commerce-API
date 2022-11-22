@@ -7,7 +7,10 @@ import {
 import { authguard } from '../middlewares/auth';
 const reviewRouter = Router();
 
-reviewRouter.route('/').post(authguard, createReview).get(getReviews);
-reviewRouter.route('/:reviewid').delete(authguard, deleteReview);
+reviewRouter.route('/').get(getReviews);
+reviewRouter
+  .route('/:reviewid')
+  .delete(authguard, deleteReview)
+  .post(authguard, createReview);
 
 export default reviewRouter;

@@ -7,6 +7,6 @@ const reviewSchema = new Schema({
   text: { type: String, require: true },
 });
 
-const Reviews = model<IReview>('Reviews', reviewSchema);
+const Reviews = model<IReview>('Review', reviewSchema);
 
 export default Reviews;
