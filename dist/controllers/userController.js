@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uploadProfilePicture = exports.updateProfile = exports.login = exports.createUser = void 0;
 const jwt_1 = require("../utils/jwt");
-// import sendEmail from '../service/mailgun';
 const email_1 = __importDefault(require("../utils/email"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));

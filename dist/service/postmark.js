@@ -12,27 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mail_1 = __importDefault(require("@sendgrid/mail"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
-const msg = {
-    from: `e-commerce <${process.env.SENDGRID_EMAIL}>`,
-    mail_settings: { sandbox_mode: { enable: false } }
-};
-() => {
-    msg.mail_settings.sandbox_mode.enable = true;
-};
-const sendEmail = (email, subject, message) => __awaiter(void 0, void 0, void 0, function* () {
+const postmark_1 = __importDefault(require("postmark"));
+const client = new postmark_1.default.ServerClient('9b8fbc09-a91a-4613-8eda-4071381db4e9');
+const sendEmailOTP = (email, subject, message) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        msg.to = email;
-        msg.subject = subject;
-        msg.text = message;
-        yield mail_1.default.send(msg);
-        console.log("message sent...");
+        client.sendEmail({
+            From: 'victor.barny@gsasconnect.net',
+            To: email,
+            Subject: subject,
+            HtmlBody: '<strong>Hello</strong> dear Postmark user.',
+            TextBody: message,
+            MessageStream: 'outbound',
+        });
     }
-    catch (err) {
-        return err;
+    catch (error) {
+        console.log(error);
     }
 });
-exports.default = sendEmail;
+exports.default = sendEmailOTP;

@@ -90,9 +90,11 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (New) {
       products = await Products.find().sort({ createdAt: -1 });
     } else if (Category) {
-      products = await Products.find({ category: { $in: [Category] } });
+      products = await Products.find({
+        category: { $in: [Category] },
+      }).populate('review');
     } else {
-      products = await Products.find();
+      products = await Products.find().populate('review', { user: 1, text: 1 });
     }
 
     if (!products) return errorResponse(res, 404, 'Product not found');

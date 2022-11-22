@@ -3,16 +3,17 @@ import { Iproduct } from '../utils/interface';
 
 const productSchema = new mongoose.Schema(
   {
-    owner: { type: mongoose.Types.ObjectId },
+    owner: { type: mongoose.Types.ObjectId, ref: 'users' },
     name: { type: String, required: true },
     category: { type: Array },
     description: { type: String, required: true },
     images: [String],
     price: { type: Number, required: true },
     sizes: [String],
-    noOfReviews:{type:Number,defauult:0},
+    noOfReviews: { type: Number, defauult: 0 },
     instock: { type: Boolean, default: true },
     rating: { type: Number },
+    review: { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
   },
   { timestamps: true }
 );
