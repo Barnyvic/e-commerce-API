@@ -68,3 +68,11 @@ export interface IReview extends IUser, Iproduct {
   product: Iproduct;
   text: string;
 }
+
+export interface ICredit {
+  amount: string;
+  receiver: string;
+  sender: string;
+  status: string;
+  reference: string;
+}
