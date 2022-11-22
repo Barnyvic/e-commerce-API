@@ -12,15 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
 exports.verifyVendor = exports.verifyAdmin = exports.authguard = void 0;
-=======
-
-exports.verifyAdmin = exports.authguard = void 0;
-
-exports.verifyVendor = exports.verifyAdmin = exports.authguard = void 0;
-
->>>>>>> 38f6881a10a6c91725295cff3baa62d772704e9e
 const jwt_1 = require("../utils/jwt");
 const userModel_1 = __importDefault(require("../models/userModel"));
 const response_1 = require("../utils/response");
@@ -57,10 +49,6 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.verifyAdmin = verifyAdmin;
-<<<<<<< HEAD
-=======
-
->>>>>>> 38f6881a10a6c91725295cff3baa62d772704e9e
 const verifyVendor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { _id } = req.user;
@@ -74,7 +62,3 @@ const verifyVendor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.verifyVendor = verifyVendor;
-<<<<<<< HEAD
-=======
-
->>>>>>> 38f6881a10a6c91725295cff3baa62d772704e9e

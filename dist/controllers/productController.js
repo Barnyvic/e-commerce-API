@@ -81,10 +81,12 @@ const getAllProducts = (req, res) => __awaiter(void 0, void 0, void 0, function*
             products = yield productmodels_1.default.find().sort({ createdAt: -1 });
         }
         else if (Category) {
-            products = yield productmodels_1.default.find({ category: { $in: [Category] } });
+            products = yield productmodels_1.default.find({
+                category: { $in: [Category] },
+            }).populate('review');
         }
         else {
-            products = yield productmodels_1.default.find();
+            products = yield productmodels_1.default.find().populate('review', { user: 1, text: 1 });
         }
         if (!products)
             return (0, response_1.errorResponse)(res, 404, 'Product not found');
