@@ -2,8 +2,8 @@ import { Schema, Types, model } from 'mongoose';
 import { IReview } from '../utils/interface';
 
 const reviewSchema = new Schema({
-  user: { type: Types.ObjectId },
-  product: { type: Types.ObjectId },
+  user: { type: Schema.Types.ObjectId },
+  product: { type: Schema.Types.ObjectId, ref: 'Product' },
   text: { type: String, require: true },
 });
 

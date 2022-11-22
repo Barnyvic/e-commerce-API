@@ -90,7 +90,9 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (New) {
       products = await Products.find().sort({ createdAt: -1 });
     } else if (Category) {
-      products = await Products.find({ category: { $in: [Category] } });
+      products = await Products.find({
+        category: { $in: [Category] },
+      }).populate('review');
     } else {
       products = await Products.find();
     }

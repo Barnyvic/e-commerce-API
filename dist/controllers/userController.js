@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateProfile = exports.login = exports.createUser = void 0;
 const jwt_1 = require("../utils/jwt");
-const mailgun_1 = __importDefault(require("../service/mailgun"));
+const postmark_1 = __importDefault(require("../service/postmark"));
 // import sendEmail from '../utils/email';
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));
@@ -26,7 +26,7 @@ const hash_1 = require("../utils/hash");
 //@access Public
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { firstName, lastName, email, password, phone, confirmPassword, } = req.body;
+        const { firstName, lastName, email, password, phone, confirmPassword } = req.body;
         //    making sure all fields are valid
         if (!email ||
             !password ||
@@ -65,7 +65,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield Otp_1.default.create({ email, token: otp });
         const subject = 'User created';
         const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-        yield (0, mailgun_1.default)(email, subject, message);
+        yield (0, postmark_1.default)(email, subject, message);
         return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.', user);
     }
     catch (error) {

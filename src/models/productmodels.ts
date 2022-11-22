@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema(
     sizes: [String],
     instock: { type: Boolean, default: true },
     rating: { type: Number },
+    review: { type: mongoose.Schema.Types.ObjectId, ref: 'Reviews' },
   },
   { timestamps: true }
 );

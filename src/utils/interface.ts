@@ -39,6 +39,7 @@ export interface Iproduct {
   sizes?: number;
   rating?: number;
   instock?: boolean;
+  review?: IReview;
 }
 
 export interface Iorder {
