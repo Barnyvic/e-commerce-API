@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     images: [String],
     price: { type: Number, required: true },
     sizes: [String],
+    noOfReviews:{type:Number,defauult:0},
     instock: { type: Boolean, default: true },
     rating: { type: Number },
     review: { type: mongoose.Schema.Types.ObjectId, ref: 'Reviews' },

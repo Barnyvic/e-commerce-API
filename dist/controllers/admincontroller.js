@@ -12,6 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
+=======
+exports.createVendor = void 0;
+
+>>>>>>> 38f6881a10a6c91725295cff3baa62d772704e9e
 exports.deactivateUser = exports.createVendor = void 0;
 // import sendEmail from '../service/mailgun';
 const email_1 = __importDefault(require("../utils/email"));
@@ -74,6 +79,11 @@ const createVendor = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.createVendor = createVendor;
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 38f6881a10a6c91725295cff3baa62d772704e9e
 const deactivateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { _id } = req.user;

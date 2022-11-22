@@ -7,7 +7,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const orderSchema = new mongoose_1.default.Schema({
     owner: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'User' },
     orderId: { type: String, required: true },
-    vendorId: { type: String, required: true },
     item: [
         {
             product: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Product' },
@@ -19,5 +18,7 @@ const orderSchema = new mongoose_1.default.Schema({
     orderDate: { type: Date },
     orderStatus: { type: String, default: 'pending' },
     remarks: { type: String },
+}, {
+    timestamps: true,
 });
 exports.default = mongoose_1.default.model('Order', orderSchema);

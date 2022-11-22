@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateProfile = exports.login = exports.createUser = void 0;
+exports.uploadProfilePicture = exports.updateProfile = exports.login = exports.createUser = void 0;
 const jwt_1 = require("../utils/jwt");
-const postmark_1 = __importDefault(require("../service/postmark"));
-// import sendEmail from '../utils/email';
+const email_1 = __importDefault(require("../utils/email"));
 const otp_generator_1 = __importDefault(require("otp-generator"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const Otp_1 = __importDefault(require("../models/Otp"));
@@ -65,7 +64,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield Otp_1.default.create({ email, token: otp });
         const subject = 'User created';
         const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
-        yield (0, postmark_1.default)(email, subject, message);
+        yield (0, email_1.default)(email, subject, message);
         return (0, response_1.successResponse)(res, 201, 'Account created successfully, kindly verify your email and login.', user);
     }
     catch (error) {
@@ -119,3 +118,16 @@ const updateProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateProfile = updateProfile;
+const uploadProfilePicture = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const { _id } = req.user;
+        const user = yield userModel_1.default.findByIdAndUpdate(_id, { photo: (_a = req.file) === null || _a === void 0 ? void 0 : _a.path }, { new: true });
+        return (0, response_1.successResponse)(res, 200, 'picture uploaded successfully', user);
+    }
+    catch (error) {
+        (0, response_1.handleError)(req, error);
+        return (0, response_1.errorResponse)(res, 500, 'Server error.');
+    }
+});
+exports.uploadProfilePicture = uploadProfilePicture;

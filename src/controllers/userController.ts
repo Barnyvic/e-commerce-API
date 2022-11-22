@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { generateToken } from '../utils/jwt';
 import { IOtp, IUser } from '../utils/interface';
-// import sendEmail from '../utils/email';
+import sendEmail from '../utils/email';
 import otpGenerator from 'otp-generator';
 import Users from '../models/userModel';
 import OTP from '../models/Otp';
@@ -69,7 +69,7 @@ export const createUser = async (req: Request, res: Response) => {
     const subject = 'User created';
     const message = `hi, thank you for signing up kindly verify your account with this token ${otp}`;
 
-    // await sendEmail(email, subject, message);
+    await sendEmail(email, subject, message);
 
     return successResponse(
       res,
@@ -126,6 +126,21 @@ export const updateProfile = async (req: Request, res: Response) => {
       'user profile updated successfully',
       profile
     );
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+export const uploadProfilePicture = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const user = await Users.findByIdAndUpdate(
+      _id,
+      { photo: req.file?.path },
+      { new: true }
+    );
+    return successResponse(res, 200, 'picture uploaded successfully', user);
   } catch (error) {
     handleError(req, error);
     return errorResponse(res, 500, 'Server error.');
