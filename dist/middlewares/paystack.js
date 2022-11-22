@@ -12,29 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mail_1 = __importDefault(require("@sendgrid/mail"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// import nodemailer from 'nodemailer';
-// import config from "../config";
-mail_1.default.setApiKey(process.env.SENDGRID_API_KEY);
-const msg = {
-    from: `Donda <${process.env.SENDGRID_EMAIL}>`,
-    mail_settings: { sandbox_mode: { enable: false } }
-};
-() => {
-    msg.mail_settings.sandbox_mode.enable = true;
-};
-const sendEmail = (email, subject, message) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        msg.to = email;
-        msg.subject = subject;
-        msg.text = message;
-        yield mail_1.default.send(msg);
-        console.log("message sent...");
-    }
-    catch (err) {
-        return err;
-    }
-});
-exports.default = sendEmail;
+function initializePayment(form) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = {};
+    });
+}

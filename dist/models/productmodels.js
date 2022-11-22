@@ -12,6 +12,7 @@ const productSchema = new mongoose_1.default.Schema({
     images: [String],
     price: { type: Number, required: true },
     sizes: [String],
+    noOfReviews: { type: Number, defauult: 0 },
     instock: { type: Boolean, default: true },
     rating: { type: Number },
 }, { timestamps: true });

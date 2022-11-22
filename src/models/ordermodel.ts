@@ -4,7 +4,6 @@ import { Iorder } from '../utils/interface';
 const orderSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   orderId: { type: String, required: true },
-  vendorId: { type: String, required: true },
   item: [
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -16,6 +15,8 @@ const orderSchema = new mongoose.Schema({
   orderDate: { type: Date },
   orderStatus: { type: String, default: 'pending' },
   remarks: { type: String },
+},{
+  timestamps:true,
 });
 
 export default mongoose.model<Iorder>('Order', orderSchema);
