@@ -11,18 +11,24 @@ import { successResponse, errorResponse, handleError } from '../utils/response';
 export const createReview = async (req: Request, res: Response) => {
   try {
     const { text } = req.body;
-    const { productid } = req.params;
+    const { reviewid } = req.params;
     const { _id } = req.user;
     const user = await Users.findById(_id);
     if (user?.role.includes('vendor'))
       return errorResponse(res, 401, 'You are not authorided');
 
-    const product = await Products.findById(productid);
+    const products: any = await Products.findById(reviewid);
+
     const review = await Reviews.create({
       user: user?.id,
       text,
-      product: product?.id,
+      product: products?.id,
     });
+
+    products.review = review?.id;
+
+    await products?.save();
+
     return successResponse(
       res,
       201,
@@ -37,7 +43,11 @@ export const createReview = async (req: Request, res: Response) => {
 
 export const getReviews = async (req: Request, res: Response) => {
   try {
-    const review = await Reviews.find().populate('product', { image: 1 });
+    const review = await Reviews.find().populate('product', {
+      name: 1,
+      description: 1,
+      price: 1,
+    });
     if (!review) return errorResponse(res, 404, 'Product not found');
     return successResponse(res, 200, 'List Of all products....', review);
   } catch (error) {
