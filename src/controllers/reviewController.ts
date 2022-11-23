@@ -46,7 +46,22 @@ export const getReviews = async (req: Request, res: Response) => {
   }
 };
 
-export const getAproductReview = async (req: Request, res: Response) => {};
+export const updateReview = async (req: Request, res: Response) => {
+  try {
+    const { reviewid } = req.params;
+    const { _id } = req.user;
+    const review = await Reviews.findById(reviewid);
+    if (_id?.toString() === review?.user?.toString()) {
+      await Reviews.updateOne({
+        $set: req.body,
+      });
+      return successResponse(res, 204, 'Product Deleted successfully..');
+    }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
 
 export const deleteReview = async (req: Request, res: Response) => {
   try {
