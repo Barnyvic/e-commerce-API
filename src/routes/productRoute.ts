@@ -4,6 +4,8 @@ import {
   deleteProduct,
   getAllProducts,
   getProduct,
+  likeProduct,
+  unlikeProduct,
   updateProduct,
   uplooadProductImages,
 } from '../controllers/productController';
@@ -23,5 +25,8 @@ productRouter
 productRouter
   .route('/uploadimage/:productid')
   .patch(authguard, upload.array('image'), uplooadProductImages);
+
+productRouter.route('/like/:productid').put(authguard, likeProduct);
+productRouter.route('/unlike/:productid').put(authguard, unlikeProduct);
 
 export default productRouter;

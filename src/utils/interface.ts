@@ -38,6 +38,7 @@ export interface Iproduct {
   price?: number;
   sizes?: number;
   rating?: number;
+  likes?: [IUser];
   instock?: boolean;
   review?: IReview;
 }
