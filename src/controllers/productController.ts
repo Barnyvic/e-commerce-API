@@ -88,13 +88,17 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let products;
 
     if (New) {
-      products = await Products.find().sort({ createdAt: -1 });
+      products = await Products.find()
+        .sort({ createdAt: -1 })
+        .populate({ path: 'review', select: ['text', 'user'] });
     } else if (Category) {
       products = await Products.find({
         category: { $in: [Category] },
-      }).populate('review');
+      }).populate({ path: 'review', select: ['text', 'user'] });
     } else {
-      products = await Products.find().populate('review', { user: 1, text: 1 });
+      products = await Products.find()
+        .populate({ path: 'review', select: ['text', 'user'] })
+        .exec();
     }
 
     if (!products) return errorResponse(res, 404, 'Product not found');
