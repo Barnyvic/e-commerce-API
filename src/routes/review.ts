@@ -9,6 +9,7 @@ import { authguard } from '../middlewares/auth';
 const reviewRouter = Router();
 
 reviewRouter.route('/').get(getReviews);
+
 reviewRouter
   .route('/:reviewid')
   .delete(authguard, deleteReview)

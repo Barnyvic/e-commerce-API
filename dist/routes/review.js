@@ -8,5 +8,6 @@ reviewRouter.route('/').get(reviewController_1.getReviews);
 reviewRouter
     .route('/:reviewid')
     .delete(auth_1.authguard, reviewController_1.deleteReview)
-    .post(auth_1.authguard, reviewController_1.createReview);
+    .post(auth_1.authguard, reviewController_1.createReview)
+    .put(auth_1.authguard, reviewController_1.updateReview);
 exports.default = reviewRouter;
