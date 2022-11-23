@@ -17,4 +17,6 @@ productRouter
 productRouter
     .route('/uploadimage/:productid')
     .patch(auth_1.authguard, upload_1.default.array('image'), productController_1.uplooadProductImages);
+productRouter.route('/like/:productid').put(auth_1.authguard, productController_1.likeProduct);
+productRouter.route('/unlike/:productid').put(auth_1.authguard, productController_1.unlikeProduct);
 exports.default = productRouter;

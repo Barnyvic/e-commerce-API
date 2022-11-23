@@ -5,7 +5,7 @@ import { successResponse, errorResponse, handleError } from '../utils/response';
 import { Iproduct } from '../utils/interface';
 
 //@desc Create a  new Product
-//@route POST /register
+//@route POST /api/products
 //@access Public
 
 export const createNewProduct = async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ export const createNewProduct = async (req: Request, res: Response) => {
 };
 
 //@desc Upload product image
-//@route POST /upload-image/:productid
+//@route POST /api/products/upload-image/:productid
 //@access Private
 
 export const uplooadProductImages = async (req: Request, res: Response) => {
@@ -78,7 +78,7 @@ export const uplooadProductImages = async (req: Request, res: Response) => {
 };
 
 //@desc get all Products
-//@route GET /
+//@route GET /api/products
 //@access Public
 
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -88,13 +88,17 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let products;
 
     if (New) {
-      products = await Products.find().sort({ createdAt: -1 });
+      products = await Products.find()
+        .sort({ createdAt: -1 })
+        .populate({ path: 'review', select: ['text', 'user'] });
     } else if (Category) {
       products = await Products.find({
         category: { $in: [Category] },
-      }).populate('review');
+      }).populate({ path: 'review', select: ['text', 'user'] });
     } else {
-      products = await Products.find().populate('review', { user: 1, text: 1 });
+      products = await Products.find()
+        .populate({ path: 'review', select: ['text', 'user'] })
+        .exec();
     }
 
     if (!products) return errorResponse(res, 404, 'Product not found');
@@ -107,7 +111,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 };
 
 //@desc get a  particular Product
-//@route GET /:productid
+//@route GET /api/products/:productid
 //@access Public
 
 export const getProduct = async (req: Request, res: Response) => {
@@ -124,7 +128,7 @@ export const getProduct = async (req: Request, res: Response) => {
 };
 
 //@desc Update a Product
-//@route PUT /:productid
+//@route PUT /api/products/:productid
 //@access Private
 
 export const updateProduct = async (req: Request, res: Response) => {
@@ -147,7 +151,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 //@desc delete a Product
-//@route Delete /:productid
+//@route Delete /api/products/:productid
 //@access Private
 
 export const deleteProduct = async (req: Request, res: Response) => {
@@ -160,6 +164,70 @@ export const deleteProduct = async (req: Request, res: Response) => {
       await Products.findByIdAndDelete(productid);
       return successResponse(res, 204, 'Product Deleted successfully..');
     }
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc  to like a Product
+//@route Put  /api/products/like/:productid
+//@access Private
+
+export const likeProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    const user = await Users.findById(_id);
+    // Check if the product has already been liked by a user
+    const likedProduct: any = products?.likes?.filter(
+      (like) => like?.toString() === _id?.toString()
+    )?.length;
+    if (likedProduct > 0) {
+      return errorResponse(res, 400, 'Product already liked');
+    }
+
+    products?.likes?.unshift(user?.id);
+
+    await products?.save();
+
+    return successResponse(res, 200, 'Product Liked  successfully..');
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
+
+//@desc  to unlike a Product
+//@route Put  /api/products/unlike/:productid
+//@access Private
+
+export const unlikeProduct = async (req: Request, res: Response) => {
+  try {
+    const { _id } = req.user;
+    const { productid } = req.params;
+    const products = await Products.findById(productid);
+
+    const user = await Users.findById(_id);
+    // Check if the product has already been liked by a user
+    const likedProduct: any = products?.likes?.filter(
+      (like) => like?.toString() === _id?.toString()
+    )?.length;
+    if (likedProduct === 0) {
+      return errorResponse(res, 400, 'Product has not yet been liked');
+    }
+
+    const removeIndex: any = products?.likes
+      ?.map((like) => like?.toString())
+      .indexOf(user?.id);
+
+    products?.likes?.splice(removeIndex, 1);
+
+    await products?.save();
+
+    return successResponse(res, 200, 'Product Unliked  successfully..');
   } catch (error) {
     handleError(req, error);
     return errorResponse(res, 500, 'Server error.');
