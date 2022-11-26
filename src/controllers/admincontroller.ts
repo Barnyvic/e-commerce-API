@@ -104,6 +104,20 @@ export const deactivateUser = async (req: Request, res: Response) => {
   }
 };
 
+export const activateDeactivatedUser = async(req:Request, res:Response) => {
+  try {
+    const { userId } = req.params;
+    const user = await Users.findById(userId);
+    if (!user) return errorResponse(res, 404, 'User not found');
+    user.active = true;
+    const result = await user.save();
+    return successResponse(res, 200, 'user activated', result);
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+}
+
 export const updateUserRole = async(req:Request,res:Response) => {
   try {
     const { userId } = req.params;
