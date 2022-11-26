@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { generateToken } from '../utils/jwt';
-import { IOtp, IUser } from '../utils/interface';
 import sendEmail from '../utils/email';
 import otpGenerator from 'otp-generator';
 import Users from '../models/userModel';
@@ -24,7 +23,7 @@ export const createUser = async (req: Request, res: Response) => {
       !firstName ||
       !lastName ||
       !phone ||
-      !confirmPassword
+      !confirmPassword 
     ) {
       return errorResponse(res, 400, 'Please Fill empty fields');
     }
