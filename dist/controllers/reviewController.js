@@ -29,12 +29,13 @@ const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (user === null || user === void 0 ? void 0 : user.role.includes('vendor'))
             return (0, response_1.errorResponse)(res, 401, 'You are not authorided');
         const products = yield productmodels_1.default.findById(reviewid);
-        console.log(products);
         const review = yield review_1.default.create({
             user: user === null || user === void 0 ? void 0 : user.id,
             text,
             product: products === null || products === void 0 ? void 0 : products.id,
         });
+        products.review = review === null || review === void 0 ? void 0 : review.id;
+        yield (products === null || products === void 0 ? void 0 : products.save());
         return (0, response_1.successResponse)(res, 201, 'Product created successfully....', review);
     }
     catch (error) {
@@ -45,7 +46,11 @@ const createReview = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.createReview = createReview;
 const getReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const review = yield review_1.default.find().populate('product');
+        const review = yield review_1.default.find().populate('product', {
+            name: 1,
+            description: 1,
+            price: 1,
+        });
         if (!review)
             return (0, response_1.errorResponse)(res, 404, 'Product not found');
         return (0, response_1.successResponse)(res, 200, 'List Of all products....', review);

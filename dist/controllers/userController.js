@@ -20,6 +20,7 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const Otp_1 = __importDefault(require("../models/Otp"));
 const response_1 = require("../utils/response");
 const hash_1 = require("../utils/hash");
+const user_1 = require("../validation/user");
 //@desc Register new user
 //@route POST /register
 //@access Public
@@ -75,9 +76,10 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.createUser = createUser;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const valid = (0, user_1.validateLoginUser)(req.body);
+        if (valid.error)
+            return (0, response_1.errorResponse)(res, 406, 'please fill all fields');
         const { email, password } = req.body;
-        if (!email || !password)
-            return (0, response_1.errorResponse)(res, 400, 'please fill all fields');
         const user = yield userModel_1.default.findOne({ email });
         if (!user)
             return (0, response_1.errorResponse)(res, 404, 'user not found');

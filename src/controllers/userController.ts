@@ -6,6 +6,7 @@ import Users from '../models/userModel';
 import OTP from '../models/Otp';
 import { successResponse, errorResponse, handleError } from '../utils/response';
 import { hashPassword, comparePassword } from '../utils/hash';
+import { validateLoginUser } from '../validation/user';
 
 //@desc Register new user
 //@route POST /register
@@ -23,7 +24,7 @@ export const createUser = async (req: Request, res: Response) => {
       !firstName ||
       !lastName ||
       !phone ||
-      !confirmPassword 
+      !confirmPassword
     ) {
       return errorResponse(res, 400, 'Please Fill empty fields');
     }
@@ -84,9 +85,12 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
+    const valid = validateLoginUser(req.body);
+    if (valid.error)
+      return res.status(206).send(valid.error?.details[0].message);
+
     const { email, password } = req.body;
-    if (!email || !password)
-      return errorResponse(res, 400, 'please fill all fields');
+
     const user = await Users.findOne({ email });
     if (!user) return errorResponse(res, 404, 'user not found');
     const isPassword = await comparePassword(password, user.password);
