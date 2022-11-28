@@ -4,5 +4,8 @@ const express_1 = require("express");
 const adminRouter = (0, express_1.Router)();
 const admincontroller_1 = require("../controllers/admincontroller");
 const auth_1 = require("../middlewares/auth");
+adminRouter.route('/update/:userId').patch(auth_1.authguard, auth_1.verifyAdmin, admincontroller_1.updateUserRole);
+adminRouter.route('/deactivate/:userId').put(auth_1.authguard, auth_1.verifyAdmin, admincontroller_1.deactivateUser);
+adminRouter.route('/activate/:userId').patch(auth_1.authguard, auth_1.verifyAdmin, admincontroller_1.activateDeactivatedUser);
 adminRouter.route('/create').post(auth_1.authguard, auth_1.verifyAdmin, admincontroller_1.createVendor);
 exports.default = adminRouter;
