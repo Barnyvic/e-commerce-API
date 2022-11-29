@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { IUser } from '../utils/interface';
+import { Iproduct, IUser } from '../utils/interface';
 
 // when the user signs up
 export const validateSignupData = (user: IUser) => {
@@ -40,4 +40,16 @@ export const validateUpdateUserProfile = (updateProfile: IUser) => {
     phone: Joi.string().min(9).max(15),
   });
   return UpdateProfileshcema.validate(updateProfile);
+};
+
+export const validateCreateProduct = (products: Iproduct) => {
+  const shcema = Joi.object({
+    name: Joi.string().min(3).max(25).required(),
+    category: Joi.array().items(Joi.string()).required(),
+    description: Joi.string().required(),
+    price: Joi.number().required(),
+    sizes: Joi.array().items(Joi.string().required()),
+    rating: Joi.string().min(9).max(15),
+  });
+  return shcema.validate(products);
 };

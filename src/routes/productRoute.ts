@@ -11,10 +11,14 @@ import {
 } from '../controllers/productController';
 import { authguard } from '../middlewares/auth';
 import upload from '../middlewares/upload';
+import { validateCreateProductMiddleware } from '../middlewares/Validate';
 
 const productRouter = Router();
 
-productRouter.route('/').post(authguard, createNewProduct).get(getAllProducts);
+productRouter
+  .route('/')
+  .post(authguard, validateCreateProductMiddleware, createNewProduct)
+  .get(getAllProducts);
 
 productRouter
   .route('/:productid')

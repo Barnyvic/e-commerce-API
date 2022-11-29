@@ -14,6 +14,11 @@ function successResponse(
   return res.status(statusCode).send(resobj);
 }
 
+const validateError = (res: Response, statusCode: number, error: any) => {
+  const resobj = { statusCode, error };
+  return res.status(statusCode).send(resobj);
+};
+
 function handleError(req: Request, error: any) {
   console.log(`
         Errormessage: ${JSON.stringify(
@@ -22,4 +27,4 @@ function handleError(req: Request, error: any) {
     `);
 }
 
-export { errorResponse, successResponse, handleError };
+export { errorResponse, successResponse, handleError, validateError };
