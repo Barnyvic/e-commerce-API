@@ -145,3 +145,21 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
     return errorResponse(res, 500, 'Server error.');
   }
 };
+
+export const verifyAccount = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body;
+    const otp = await OTP.findOne({ token });
+    if (!otp) return errorResponse(res, 404, 'otp has already been used.');
+    await Users.findByIdAndUpdate({ email: otp.email }, { verified: true });
+    await OTP.findByIdAndUpdate({ email: otp.email }, { expired: true });
+    return successResponse(
+      res,
+      200,
+      'Account verified successfully,kindly login'
+    );
+  } catch (error) {
+    handleError(req, error);
+    return errorResponse(res, 500, 'Server error.');
+  }
+};
