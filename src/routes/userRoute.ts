@@ -7,6 +7,7 @@ import {
   login,
   updateProfile,
   uploadProfilePicture,
+  verifyAccount,
 } from '../controllers/userController';
 import { authguard } from '../middlewares/auth';
 import upload from '../middlewares/upload';
@@ -18,6 +19,7 @@ import {
 
 userRouter.route('/signup').post(validateSignupMiddleware, createUser);
 userRouter.route('/login').get(validateLoginMiddleware, login);
+userRouter.route('/verify').patch(verifyAccount);
 userRouter
   .route('/upload')
   .put(authguard, upload.array('image'), uploadProfilePicture);
