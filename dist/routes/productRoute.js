@@ -7,8 +7,12 @@ const express_1 = require("express");
 const productController_1 = require("../controllers/productController");
 const auth_1 = require("../middlewares/auth");
 const upload_1 = __importDefault(require("../middlewares/upload"));
+const Validate_1 = require("../middlewares/Validate");
 const productRouter = (0, express_1.Router)();
-productRouter.route('/').post(auth_1.authguard, productController_1.createNewProduct).get(productController_1.getAllProducts);
+productRouter
+    .route('/')
+    .post(auth_1.authguard, Validate_1.validateCreateProductMiddleware, productController_1.createNewProduct)
+    .get(productController_1.getAllProducts);
 productRouter
     .route('/:productid')
     .get(productController_1.getProduct)

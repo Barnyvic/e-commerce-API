@@ -8,8 +8,13 @@ const userRouter = (0, express_1.Router)();
 const userController_1 = require("../controllers/userController");
 const auth_1 = require("../middlewares/auth");
 const upload_1 = __importDefault(require("../middlewares/upload"));
-userRouter.route('/signup').post(userController_1.createUser);
-userRouter.route('/login').get(userController_1.login);
-userRouter.route('/upload').put(auth_1.authguard, upload_1.default.array('image'), userController_1.uploadProfilePicture);
-userRouter.route('/update').patch(auth_1.authguard, userController_1.updateProfile);
+const Validate_1 = require("../middlewares/Validate");
+userRouter.route('/signup').post(Validate_1.validateSignupMiddleware, userController_1.createUser);
+userRouter.route('/login').get(Validate_1.validateLoginMiddleware, userController_1.login);
+userRouter
+    .route('/upload')
+    .put(auth_1.authguard, upload_1.default.array('image'), userController_1.uploadProfilePicture);
+userRouter
+    .route('/update')
+    .patch(auth_1.authguard, Validate_1.validateUpdateUserMiddleware, userController_1.updateProfile);
 exports.default = userRouter;
